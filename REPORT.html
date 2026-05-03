@@ -1,0 +1,671 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>IPC Debugger - Project Report</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 2cm 2cm;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 12pt;
+      line-height: 1.6;
+      color: #000;
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #fff;
+    }
+
+    h1 {
+      font-size: 22pt;
+      text-align: center;
+      margin-bottom: 5px;
+      border-bottom: 3px double #000;
+      padding-bottom: 10px;
+    }
+
+    h2 {
+      font-size: 14pt;
+      margin-top: 30px;
+      margin-bottom: 10px;
+      page-break-after: avoid;
+      border-bottom: 1px solid #555;
+      padding-bottom: 4px;
+    }
+
+    h3 {
+      font-size: 12pt;
+      margin-top: 18px;
+      margin-bottom: 6px;
+      page-break-after: avoid;
+    }
+
+    p {
+      margin: 8px 0;
+      text-align: justify;
+    }
+
+    ul, ol {
+      margin: 8px 0 12px 24px;
+      padding: 0;
+    }
+
+    li { margin: 4px 0; }
+
+    .subtitle {
+      text-align: center;
+      font-style: italic;
+      color: #555;
+      margin-bottom: 30px;
+    }
+
+    .meta {
+      text-align: center;
+      font-size: 11pt;
+      margin-bottom: 30px;
+      color: #333;
+    }
+
+    .meta div { margin: 3px 0; }
+
+    code, pre {
+      font-family: 'Courier New', Courier, monospace;
+      background-color: #f0f0f0;
+      padding: 1px 4px;
+      border-radius: 3px;
+      font-size: 10.5pt;
+    }
+
+    pre {
+      padding: 12px;
+      border: 1px solid #ccc;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      page-break-inside: avoid;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0;
+      font-size: 11pt;
+    }
+
+    th, td {
+      border: 1px solid #555;
+      padding: 6px 10px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background-color: #e0e0e0;
+      font-weight: bold;
+    }
+
+    .toc {
+      background: #f8f8f8;
+      border: 1px solid #ccc;
+      padding: 15px 25px;
+      margin: 20px 0 30px 0;
+    }
+
+    .toc h2 {
+      margin-top: 0;
+      border: none;
+    }
+
+    .flow-diagram {
+      border: 2px solid #333;
+      padding: 18px;
+      margin: 15px 0;
+      background: #fafafa;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 10pt;
+      white-space: pre;
+      line-height: 1.3;
+      page-break-inside: avoid;
+      overflow-x: auto;
+    }
+
+    .appendix-box {
+      background: #f8f8f8;
+      border-left: 4px solid #333;
+      padding: 10px 18px;
+      margin: 12px 0;
+    }
+
+    .page-break { page-break-before: always; }
+
+    .print-instructions {
+      background: #fffbe6;
+      border: 2px dashed #d4a000;
+      padding: 15px;
+      margin-bottom: 30px;
+      font-family: Arial, sans-serif;
+      font-size: 11pt;
+    }
+
+    @media print {
+      .print-instructions { display: none; }
+      body { margin: 0; padding: 0; }
+    }
+
+    button {
+      background: #2563eb;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 13pt;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+
+    button:hover { background: #1d4ed8; }
+  </style>
+</head>
+<body>
+
+  <!-- Print Instructions (hidden when printing) -->
+  <div class="print-instructions">
+    <strong>📄 The "Save as PDF" dialog will open automatically in 2 seconds...</strong>
+    <p style="margin: 8px 0 0 0;">When the print dialog appears:</p>
+    <ol style="margin: 4px 0 0 20px;">
+      <li>Change <strong>Destination / Printer</strong> to <strong>"Save as PDF"</strong></li>
+      <li>Click <strong>Save</strong> → choose a folder → done! ✅</li>
+    </ol>
+    <p style="margin: 10px 0 0 0;">If it didn't open, click here:
+      <button onclick="window.print()">🖨️ Save as PDF Now</button>
+    </p>
+  </div>
+
+  <script>
+    // Automatically open the browser's "Save as PDF" dialog when the page loads
+    window.addEventListener('load', function () {
+      setTimeout(function () { window.print(); }, 2000);
+    });
+  </script>
+
+  <!-- ===================== TITLE ===================== -->
+  <h1>IPC Debugger</h1>
+  <p class="subtitle">A Visual Inter-Process Communication Simulator and Debugger</p>
+
+  <div class="meta">
+    <div><strong>Course:</strong> Systems Programming / Operating Systems</div>
+    <div><strong>Project Type:</strong> University-Level Mini Project</div>
+    <div><strong>Submission Date:</strong> _______________</div>
+    <div><strong>Student Name:</strong> _______________</div>
+    <div><strong>Roll No / ID:</strong> _______________</div>
+  </div>
+
+  <!-- ===================== TOC ===================== -->
+  <div class="toc">
+    <h2>Table of Contents</h2>
+    <ol>
+      <li>Project Overview</li>
+      <li>Module-Wise Breakdown</li>
+      <li>Functionalities</li>
+      <li>Technology Used</li>
+      <li>Flow Diagram</li>
+      <li>Revision Tracking on GitHub</li>
+      <li>Conclusion and Future Scope</li>
+      <li>References</li>
+      <li>Appendix
+        <ul style="list-style-type: upper-alpha;">
+          <li>AI-Generated Project Elaboration / Breakdown Report</li>
+          <li>Problem Statement</li>
+          <li>Solution / Code</li>
+        </ul>
+      </li>
+    </ol>
+  </div>
+
+  <!-- ===================== 1. PROJECT OVERVIEW ===================== -->
+  <h2>1. Project Overview</h2>
+  <p>
+    <strong>IPC Debugger</strong> is a modern, full-stack web application designed to help systems-programming
+    students <em>visualize</em>, <em>debug</em>, and <em>simulate</em> Inter-Process Communication (IPC)
+    mechanisms — namely <strong>Pipes</strong>, <strong>Message Queues</strong>, and <strong>Shared Memory</strong>.
+    Traditional learning of IPC is heavily textbook-driven, and observing real-time behaviour of concurrent
+    processes is difficult on a typical operating-system shell. This project bridges that gap by offering an
+    interactive, browser-based dashboard where students can load pre-built scenarios (Producer-Consumer,
+    Deadlock, Race Condition, Bottleneck, Pipeline) or build their own configurations from scratch.
+  </p>
+  <p>
+    The application includes a real-time graph visualization of processes and their IPC channels, animated
+    data-flow packets, an event timeline, deadlock detection using wait-for-graph cycle analysis, performance
+    charts (latency, throughput, queue depth), shared-memory race-condition highlighting, and AI-style fix
+    suggestions. The entire tool runs in the browser with no kernel-level dependencies, making it portable,
+    safe, and ideal for academic use.
+  </p>
+
+  <!-- ===================== 2. MODULE-WISE BREAKDOWN ===================== -->
+  <h2>2. Module-Wise Breakdown</h2>
+  <p>The project is organized into seven cohesive modules:</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 28%;">Module</th>
+        <th style="width: 25%;">File(s)</th>
+        <th>Responsibility</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Type Definitions</strong></td>
+        <td><code>src/types/ipc.ts</code></td>
+        <td>Defines all TypeScript interfaces — Process, IPCChannel, IPCEvent, SharedMemorySegment, DeadlockInfo, PerformanceMetrics, etc.</td>
+      </tr>
+      <tr>
+        <td><strong>State Store / Engine</strong></td>
+        <td><code>src/store/useStore.ts</code></td>
+        <td>Zustand global store. Holds all simulation state, drives the per-tick simulation engine, runs deadlock detection (DFS), and emits performance metrics.</td>
+      </tr>
+      <tr>
+        <td><strong>Demo Scenarios</strong></td>
+        <td><code>src/data/scenarios.ts</code></td>
+        <td>Pre-built configurations for Producer-Consumer, Deadlock, Race Condition, Bottleneck, and Pipeline patterns.</td>
+      </tr>
+      <tr>
+        <td><strong>Visualization</strong></td>
+        <td><code>ProcessGraph.tsx</code>, <code>SharedMemoryView.tsx</code></td>
+        <td>SVG-based interactive process graph with zoom/pan/drag, animated data packets, and a memory-cell grid for shared memory.</td>
+      </tr>
+      <tr>
+        <td><strong>Analysis Views</strong></td>
+        <td><code>Timeline.tsx</code>, <code>TimelineView.tsx</code>, <code>PerformanceCharts.tsx</code>, <code>DeadlockPanel.tsx</code></td>
+        <td>Timeline (Gantt-style), event log, sparkline charts for latency/throughput, and deadlock cycle visualization.</td>
+      </tr>
+      <tr>
+        <td><strong>Control / UI</strong></td>
+        <td><code>Header.tsx</code>, <code>SimulationPanel.tsx</code>, <code>DetailsPanel.tsx</code>, <code>DashboardOverview.tsx</code></td>
+        <td>Top navigation, simulation controls (Start/Pause/Step/Reset), process &amp; channel CRUD forms, and the details sidebar.</td>
+      </tr>
+      <tr>
+        <td><strong>App Shell</strong></td>
+        <td><code>src/App.tsx</code>, <code>src/main.tsx</code>, <code>src/index.css</code></td>
+        <td>Composes the split-pane layout, owns the simulation interval loop, and applies the global dark theme.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- ===================== 3. FUNCTIONALITIES ===================== -->
+  <h2>3. Functionalities</h2>
+
+  <h3>3.1 Real-Time IPC Monitoring Dashboard</h3>
+  <ul>
+    <li>Processes rendered as draggable circular nodes; channels as curved, directional connections.</li>
+    <li>Animated coloured packets travel along channels to depict live message flow.</li>
+    <li>Channels are colour-coded — <strong>Green = Normal</strong>, <strong>Yellow = Slow</strong>, <strong>Red = Blocked</strong>.</li>
+    <li>Live metrics (throughput, latency) printed on each connection.</li>
+  </ul>
+
+  <h3>3.2 Timeline View</h3>
+  <ul>
+    <li>Gantt-style execution lanes per process showing event markers over time.</li>
+    <li>Detailed event-log table with timestamps, type icons, source/target processes, and channel names.</li>
+    <li>Auto-scrolling to the latest event.</li>
+  </ul>
+
+  <h3>3.3 Deadlock Detection</h3>
+  <ul>
+    <li>Builds a Wait-For Graph from blocked processes and their blocked channels.</li>
+    <li>Runs a Depth-First Search to identify circular dependencies (cycles).</li>
+    <li>Highlights cycle members on the graph (pulsing red ring) and prints an explanation + fix suggestion.</li>
+  </ul>
+
+  <h3>3.4 Bottleneck &amp; Performance Analysis</h3>
+  <ul>
+    <li>Sparkline charts for Message Rate and Average Latency (last 60 samples).</li>
+    <li>Per-channel queue-size charts.</li>
+    <li>Tabular channel-statistics view with status badges.</li>
+    <li>Bottleneck alerts ("slow consumer", "overloaded") with concrete suggestions.</li>
+  </ul>
+
+  <h3>3.5 Shared Memory Visualization</h3>
+  <ul>
+    <li>Memory segment displayed as a hex-grid of cells.</li>
+    <li>Last writer indicated by a coloured dot per cell.</li>
+    <li>Contested cells (race condition) blink red.</li>
+    <li>Suggestions to add <code>pthread_mutex_lock()</code> / <code>unlock()</code>.</li>
+  </ul>
+
+  <h3>3.6 Interactive Simulation Mode</h3>
+  <ul>
+    <li>Manual creation of processes &amp; channels via forms.</li>
+    <li>Choice of channel type — Pipe, Message Queue, Shared Memory.</li>
+    <li>Controls: <code>Start</code>, <code>Pause</code>, <code>Step</code>, <code>Reset</code>.</li>
+    <li>Speed multipliers: 0.5×, 1×, 2×, 4×.</li>
+    <li>Five pre-built demo scenarios.</li>
+    <li>Export full simulation state (processes, channels, events, metrics, issues) to JSON.</li>
+  </ul>
+
+  <h3>3.7 AI-Style Suggestions (Bonus)</h3>
+  <ul>
+    <li>Heuristic engine raises issues for high latency, queue overflow, deadlock, and race conditions.</li>
+    <li>Each issue carries a remediation tip — e.g., "Add backpressure", "Use try-lock instead of blocking lock".</li>
+  </ul>
+
+  <!-- ===================== 4. TECHNOLOGY USED ===================== -->
+  <h2>4. Technology Used</h2>
+
+  <h3>Programming Languages</h3>
+  <ul>
+    <li><strong>TypeScript</strong> — strongly-typed superset of JavaScript; powers all logic and UI components.</li>
+    <li><strong>HTML5</strong> — application shell and SVG markup.</li>
+    <li><strong>CSS3</strong> (via Tailwind utility classes) — dark-mode styling and responsive layouts.</li>
+  </ul>
+
+  <h3>Libraries and Tools</h3>
+  <ul>
+    <li><strong>React 19</strong> — component-based UI library.</li>
+    <li><strong>Vite 7</strong> — lightning-fast dev server and build tool.</li>
+    <li><strong>Tailwind CSS 4</strong> — utility-first CSS framework for the dark-themed UI.</li>
+    <li><strong>Zustand</strong> — lightweight global state-management store (simulation engine).</li>
+    <li><strong>Lucide React</strong> — icon set (used selectively).</li>
+    <li><strong>vite-plugin-singlefile</strong> — bundles the entire app into a single self-contained <code>index.html</code> for easy submission.</li>
+    <li><strong>SVG (native)</strong> — used in place of D3.js for the interactive graph and sparkline charts (zero extra dependencies, faster).</li>
+  </ul>
+
+  <h3>Other Tools</h3>
+  <ul>
+    <li><strong>Visual Studio Code</strong> — code editor.</li>
+    <li><strong>Node.js + npm</strong> — package management and build runtime.</li>
+    <li><strong>Git &amp; GitHub</strong> — version control and revision tracking.</li>
+    <li><strong>Google Chrome DevTools</strong> — debugging and performance profiling.</li>
+  </ul>
+
+  <!-- ===================== 5. FLOW DIAGRAM ===================== -->
+  <h2>5. Flow Diagram</h2>
+  <p>The high-level data and control flow of the application is shown below:</p>
+
+  <div class="flow-diagram">
++-------------------------------------------------------------+
+|                       USER (Browser)                        |
+|  - Clicks scenario   - Drags nodes   - Presses Start/Pause  |
++----------------------------+--------------------------------+
+                             |
+                             v
++-------------------------------------------------------------+
+|                    UI LAYER (React Components)              |
+|  Header | ProcessGraph | Timeline | DetailsPanel | Charts   |
++----------------------------+--------------------------------+
+                             |
+                  dispatch actions / read state
+                             |
+                             v
++-------------------------------------------------------------+
+|              GLOBAL STATE STORE (Zustand)                   |
+|   processes[]  channels[]  events[]  metrics[]  issues[]    |
+|   sharedMemory[]   deadlocks[]   simState   simConfig       |
++----------------------------+--------------------------------+
+                             |
+            tick() called every (500 / speed) ms
+                             |
+                             v
++-------------------------------------------------------------+
+|                    SIMULATION ENGINE                        |
+|  1. Update process CPU/state  (random walk + scenario rules)|
+|  2. Update channel throughput / latency / queue size        |
+|  3. Generate send/receive/block events                      |
+|  4. Spawn animated data packets                             |
+|  5. Sample performance metrics                              |
+|  6. Run wait-for-graph DFS  ->  detect deadlocks            |
+|  7. Heuristic check  ->  emit issues + AI suggestions       |
++----------------------------+--------------------------------+
+                             |
+                             v
+                    State updated  -> React re-renders
+                             |
+                             v
+                       Visual feedback
+                  (graph, timeline, charts)
+  </div>
+
+  <!-- ===================== 6. GITHUB ===================== -->
+  <h2>6. Revision Tracking on GitHub</h2>
+  <ul>
+    <li><strong>Repository Name:</strong> <code>ipc-debugger</code></li>
+    <li><strong>GitHub Link:</strong> <code>https://github.com/&lt;your-username&gt;/ipc-debugger</code></li>
+    <li><strong>Branching Strategy:</strong> <code>main</code> (production-ready) &nbsp;•&nbsp; <code>dev</code> (active development) &nbsp;•&nbsp; <code>feature/*</code> (per-feature)</li>
+    <li><strong>Commit Convention:</strong> <code>feat:</code>, <code>fix:</code>, <code>docs:</code>, <code>refactor:</code>, <code>style:</code></li>
+  </ul>
+
+  <p><em>Sample commits:</em></p>
+  <pre>feat: scaffold Vite + React + Tailwind project
+feat: add Zustand store and IPC type definitions
+feat: implement ProcessGraph with SVG nodes &amp; channels
+feat: add data-packet animation for live message flow
+feat: implement wait-for-graph deadlock detection (DFS)
+feat: shared-memory hex-grid view + race-condition highlight
+feat: performance sparkline charts (latency, throughput)
+feat: timeline view with Gantt lanes and event log
+feat: simulation panel with scenario loader + JSON export
+docs: add REPORT.html and project README</pre>
+
+  <!-- ===================== 7. CONCLUSION ===================== -->
+  <h2>7. Conclusion and Future Scope</h2>
+  <p>
+    The <strong>IPC Debugger</strong> successfully delivers an intuitive, visual, and interactive learning aid
+    for Inter-Process Communication concepts. By abstracting away kernel complexity and focusing on
+    visualization, the tool makes traditionally opaque OS behaviour — deadlocks, race conditions, slow
+    consumers — visible and explainable. The pre-built scenarios serve as ready-to-use teaching aids, while
+    the custom-build mode encourages experimentation. Performance metrics and AI-style suggestions
+    further reinforce best practices in concurrent programming.
+  </p>
+
+  <h3>Future Scope</h3>
+  <ul>
+    <li><strong>Real OS Hooks:</strong> Optionally connect to a Node.js backend that uses <code>strace</code> / <code>ltrace</code> to capture real syscall traces.</li>
+    <li><strong>Recording &amp; Replay:</strong> Persist simulations to SQLite and replay them frame-by-frame.</li>
+    <li><strong>Multiplayer Mode:</strong> WebSocket-driven collaborative debugging where multiple students manipulate the same simulation.</li>
+    <li><strong>Code Generation:</strong> Auto-generate equivalent C / Python source code from a visual configuration.</li>
+    <li><strong>LLM Integration:</strong> Replace heuristic suggestions with a real Large Language Model for richer explanations.</li>
+    <li><strong>Additional Mechanisms:</strong> Sockets, signals, semaphores, and condition variables.</li>
+    <li><strong>Mobile Support:</strong> Touch-friendly graph manipulation.</li>
+  </ul>
+
+  <!-- ===================== 8. REFERENCES ===================== -->
+  <h2>8. References</h2>
+  <ol>
+    <li>Silberschatz, A., Galvin, P. B., &amp; Gagne, G. <em>Operating System Concepts</em>, 10th Edition, Wiley.</li>
+    <li>Tanenbaum, A. S., &amp; Bos, H. <em>Modern Operating Systems</em>, 4th Edition, Pearson.</li>
+    <li>Stevens, W. R., &amp; Rago, S. A. <em>Advanced Programming in the UNIX Environment</em>, 3rd Edition, Addison-Wesley.</li>
+    <li>React Documentation — <code>https://react.dev</code></li>
+    <li>Vite Documentation — <code>https://vitejs.dev</code></li>
+    <li>Tailwind CSS Documentation — <code>https://tailwindcss.com</code></li>
+    <li>Zustand Documentation — <code>https://github.com/pmndrs/zustand</code></li>
+    <li>MDN Web Docs (SVG &amp; Canvas) — <code>https://developer.mozilla.org</code></li>
+    <li>Coffman, E. G., Elphick, M., &amp; Shoshani, A. (1971). "System Deadlocks." <em>ACM Computing Surveys</em>.</li>
+  </ol>
+
+  <!-- ===================== APPENDIX ===================== -->
+  <div class="page-break"></div>
+  <h2>Appendix</h2>
+
+  <h3>A. AI-Generated Project Elaboration / Breakdown Report</h3>
+  <div class="appendix-box">
+    <p>
+      The project was scoped and elaborated using an AI-assisted development workflow. Below is a
+      condensed breakdown produced during the planning phase:
+    </p>
+    <p><strong>Goal:</strong> Build a full-stack web application that lets a developer or student
+    visualize, debug, and simulate the three primary Inter-Process Communication mechanisms
+    (Pipes, Message Queues, Shared Memory) without requiring real kernel-level instrumentation.</p>
+
+    <p><strong>Architecture Decision:</strong> The originally suggested stack of Node.js + Express +
+    WebSockets + SQLite was simplified to a <em>pure client-side</em> implementation. This is justified
+    because (a) the simulation is deterministic and self-contained, (b) it removes any deployment
+    friction for a university submission, and (c) the <code>vite-plugin-singlefile</code> plugin allows
+    the entire app to be shipped as a single <code>index.html</code> file — perfect for grade-evaluation
+    drop-boxes.</p>
+
+    <p><strong>Module Breakdown (AI-derived):</strong></p>
+    <ol>
+      <li><strong>Type System</strong> — Centralised TypeScript interfaces guarantee consistent shapes across components.</li>
+      <li><strong>Simulation Engine</strong> — Pure-function <code>tick()</code> reducer in Zustand. Each tick mutates processes/channels/metrics and emits events. Speed is controlled by adjusting the JavaScript <code>setInterval</code> period.</li>
+      <li><strong>Visualization Layer</strong> — Native SVG (chosen over D3.js) keeps the bundle lean and the rendering predictable. Zoom/pan implemented via SVG <code>viewBox</code>, dragging via mouse-coordinate transforms.</li>
+      <li><strong>Detection Algorithms</strong> — Wait-For Graph cycle detection (Coffman 1971) implemented as DFS with an "in-stack" set. Race conditions detected via the heuristic of "two writers + one reader on the same shared segment within the same tick".</li>
+      <li><strong>UI Composition</strong> — Split-pane layout (Header / Graph / Sidebar / Timeline) chosen for familiarity (mirrors VS Code, Chrome DevTools).</li>
+      <li><strong>Heuristic AI Engine</strong> — Rules-based: latency &gt; 100 ms ⇒ warning, queue ratio &gt; 85% ⇒ error, cycle in WFG ⇒ critical. Each rule maps to a fixed suggestion string. Easily replaceable with an LLM call in the future.</li>
+    </ol>
+
+    <p><strong>Trade-offs Considered:</strong></p>
+    <ul>
+      <li>SVG vs Canvas — SVG won for declarative ease and accessibility (text remains selectable).</li>
+      <li>Redux vs Zustand — Zustand chosen for minimal boilerplate.</li>
+      <li>Real backend vs simulated — Simulated chosen to keep scope appropriate for a university project.</li>
+    </ul>
+  </div>
+
+  <h3>B. Problem Statement</h3>
+  <div class="appendix-box">
+    <p>
+      Inter-Process Communication is a foundational topic in operating-systems courses, yet it remains
+      one of the hardest for students to internalise. Traditional teaching relies on textbook diagrams
+      and small C programs that print to the terminal — neither approach makes the <em>dynamic</em>
+      behaviour of concurrent processes (message flow, queue build-up, deadlock formation, race
+      conditions) visible. Existing professional debuggers (e.g., <code>strace</code>, <code>ltrace</code>,
+      <code>SystemTap</code>) require root privileges and have steep learning curves, making them
+      unsuitable for classroom use.
+    </p>
+    <p>
+      <strong>Objective:</strong> Design and implement a web-based IPC Debugger that:
+    </p>
+    <ol>
+      <li>Visually represents processes and IPC channels as an interactive graph.</li>
+      <li>Animates real-time data flow with colour-coded health indicators.</li>
+      <li>Detects deadlocks automatically and explains them in plain English.</li>
+      <li>Identifies bottlenecks and race conditions with actionable suggestions.</li>
+      <li>Provides a sandbox where students can build, run, and step through their own scenarios.</li>
+      <li>Works entirely in a browser with no kernel-level dependencies.</li>
+    </ol>
+  </div>
+
+  <h3>C. Solution / Code</h3>
+  <div class="appendix-box">
+    <p>The complete source code lives in the GitHub repository linked in Section 6. Below are the most
+    important code excerpts.</p>
+  </div>
+
+  <p><strong>C.1 &nbsp; Project Structure</strong></p>
+  <pre>ipc-debugger/
+├── index.html                    (Vite entry HTML)
+├── package.json                  (npm dependencies)
+├── vite.config.ts                (build configuration)
+├── tsconfig.json                 (TypeScript configuration)
+├── REPORT.html                   (this report)
+└── src/
+    ├── main.tsx                  (React bootstrap)
+    ├── App.tsx                   (root layout + sim loop)
+    ├── index.css                 (Tailwind + custom CSS)
+    ├── types/
+    │   └── ipc.ts                (all TypeScript types)
+    ├── data/
+    │   └── scenarios.ts          (5 pre-built demos)
+    ├── store/
+    │   └── useStore.ts           (Zustand simulation engine)
+    ├── utils/
+    │   └── cn.ts                 (className helper)
+    └── components/
+        ├── Header.tsx
+        ├── ProcessGraph.tsx
+        ├── Timeline.tsx
+        ├── TimelineView.tsx
+        ├── DetailsPanel.tsx
+        ├── DashboardOverview.tsx
+        ├── DeadlockPanel.tsx
+        ├── PerformanceCharts.tsx
+        ├── SharedMemoryView.tsx
+        └── SimulationPanel.tsx</pre>
+
+  <p><strong>C.2 &nbsp; Deadlock Detection (DFS on Wait-For Graph)</strong></p>
+  <pre>// Inside src/store/useStore.ts — detectDeadlocks()
+const waitFor: Record&lt;string, string[]&gt; = {};
+blockedProcesses.forEach((p) =&gt; {
+  waitFor[p.id] = [];
+  channels.forEach((c) =&gt; {
+    if (c.sourceId === p.id &amp;&amp; c.status === 'blocked') {
+      waitFor[p.id].push(c.targetId);
+    }
+  });
+});
+
+const visited = new Set&lt;string&gt;();
+const inStack = new Set&lt;string&gt;();
+const cycles: string[][] = [];
+
+function dfs(node: string, path: string[]): void {
+  visited.add(node);
+  inStack.add(node);
+  path.push(node);
+  for (const neighbor of (waitFor[node] || [])) {
+    if (!visited.has(neighbor))      dfs(neighbor, [...path]);
+    else if (inStack.has(neighbor))  cycles.push(path.slice(path.indexOf(neighbor)));
+  }
+  inStack.delete(node);
+}</pre>
+
+  <p><strong>C.3 &nbsp; Simulation Tick (excerpt)</strong></p>
+  <pre>tick: () =&gt; {
+  const state = get();
+  const tick  = state.simTick + 1;
+
+  // 1. Update each process (CPU, memory, state machine)
+  const updatedProcesses = state.processes.map((p) =&gt; ({
+    ...p,
+    cpu:    Math.max(0, Math.min(100, p.cpu + (Math.random() - 0.5) * 15)),
+    state:  nextProcessState(p, scenario, tick),
+  }));
+
+  // 2. Update each channel (throughput, latency, queue, status)
+  const updatedChannels = state.channels.map(updateChannelMetrics);
+
+  // 3. Generate send/receive events &amp; spawn data packets
+  // 4. Sample performance metrics every 5 ticks
+  // 5. Run deadlock detection every 10 ticks
+
+  set({ processes: updatedProcesses, channels: updatedChannels, simTick: tick });
+}</pre>
+
+  <p><strong>C.4 &nbsp; Animated Data Packet (SVG)</strong></p>
+  <pre>// Inside src/components/ProcessGraph.tsx
+{channelPackets.map((pkt) =&gt; {
+  const t  = pkt.progress;       // 0 .. 1
+  const px = (1-t)*(1-t)*src.x + 2*(1-t)*t*ctrlX + t*t*tgt.x;
+  const py = (1-t)*(1-t)*src.y + 2*(1-t)*t*ctrlY + t*t*tgt.y;
+  return (
+    &lt;circle key={pkt.id} cx={px} cy={py} r={5} fill={pkt.color}&gt;
+      &lt;animate attributeName="r" values="4;6;4" dur="0.5s" repeatCount="indefinite" /&gt;
+    &lt;/circle&gt;
+  );
+})}</pre>
+
+  <p><strong>C.5 &nbsp; Instructions to Run</strong></p>
+  <pre># 1. Install dependencies
+npm install
+
+# 2. Start the development server
+npm run dev
+# -&gt; opens http://localhost:5173/
+
+# 3. Build a single-file production bundle
+npm run build
+# -&gt; output: dist/index.html  (open directly in any browser)</pre>
+
+  <hr style="margin-top: 50px; border: 0; border-top: 1px solid #ccc;" />
+  <p style="text-align: center; font-size: 10pt; color: #666; margin-top: 20px;">
+    — End of Report —
+  </p>
+
+</body>
+</html>
